@@ -1,0 +1,5 @@
+/home/hungkv/freelancer/DemoGrpcCPP/build/CMakeFiles/rebuild_cache.dir
+/home/hungkv/freelancer/DemoGrpcCPP/build/CMakeFiles/edit_cache.dir
+/home/hungkv/freelancer/DemoGrpcCPP/build/CMakeFiles/greeter_server.dir
+/home/hungkv/freelancer/DemoGrpcCPP/build/CMakeFiles/greeter_client.dir
+/home/hungkv/freelancer/DemoGrpcCPP/build/CMakeFiles/hw_grpc_proto.dir
