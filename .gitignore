@@ -33,3 +33,5 @@
 build/
 *.pb.cc
 *.pb.h
+greeter_client
+greeter_server

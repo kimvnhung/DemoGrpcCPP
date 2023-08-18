@@ -1,7 +1,3 @@
-generate_cc:
-	protoc -I protos --grpc_out=./src --plugin=protoc-gen-grpc=`which grpc_cpp_plugin` protos/example.proto
-	protoc -I protos --cpp_out=./src protos/example.proto
-
 #
 # Copyright 2015 gRPC authors.
 #
@@ -44,7 +40,7 @@ LDFLAGS += -L/usr/local/lib `pkg-config --libs --static protobuf grpc++ absl_fla
            -Wl,--no-as-needed -lgrpc++_reflection -Wl,--as-needed\
            -ldl
 endif
-PROTOC = $(GRPC_PROTOC)/protoc
+PROTOC = protoc
 GRPC_CPP_PLUGIN = grpc_cpp_plugin
 GRPC_CPP_PLUGIN_PATH ?= `which $(GRPC_CPP_PLUGIN)`
 
@@ -52,7 +48,7 @@ PROTOS_PATH = protos
 
 vpath %.proto $(PROTOS_PATH)
 
-all: system-check greeter_client greeter_server
+all: system-check greeter_client greeter_server 
 
 greeter_client: example.pb.o example.grpc.pb.o greeter_client.o
 	$(CXX) $^ $(LDFLAGS) -o $@
@@ -69,8 +65,7 @@ greeter_server: example.pb.o example.grpc.pb.o greeter_server.o
 	$(PROTOC) -I $(PROTOS_PATH) --cpp_out=. $<
 
 clean:
-	rm -f *.o *.pb.cc *.pb.h greeter_client greeter_server 
-
+	rm -f *.o *.pb.cc *.pb.h greeter_client greeter_server
 
 # The following is to test your system and ensure a smoother experience.
 # They are by no means necessary to actually compile a grpc-enabled software.
