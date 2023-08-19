@@ -2,9 +2,14 @@ version: '3.5'
 
 services:
   server:
-    image: grpc/cxx:1.10
+    image: example-server
     container_name: server
-  
+    ports:
+      - 50051:50051
+
   client:
-    image: grpc/cxx:1.10
-    container_name: clients
+    image: example-client
+    container_name: client
+    command: ["server:50051","client"]
+    volumes:
+      - ./json:/data/json

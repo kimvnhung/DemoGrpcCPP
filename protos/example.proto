@@ -3,19 +3,30 @@ syntax = "proto3";
 package helloworld;
 
 // The greeting service definition.
-service Greeter {
+service MyCustomService {
     // Sends a greeting
     rpc SayHello (HelloRequest) returns (HelloReply) {}
   
     rpc SayHelloStreamReply (HelloRequest) returns (stream HelloReply) {}
-  }
-  
-  // The request message containing the user's name.
-  message HelloRequest {
-    string name = 1;
-  }
-  
-  // The response message containing the greetings
-  message HelloReply {
-    string message = 1;
-  }
+
+    rpc MyCustomFunction(JsonRequest) returns (JsonReply) {}
+}
+
+// The request message containing the user's name.
+message HelloRequest {
+  string name = 1;
+}
+
+message JsonRequest {
+  int32 id = 1;
+  string name = 2;
+}
+
+message JsonReply {
+  int32 code = 1;
+}
+
+// The response message containing the greetings
+message HelloReply {
+  string message = 1;
+}
