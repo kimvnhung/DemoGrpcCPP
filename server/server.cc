@@ -31,32 +31,22 @@ using grpc::Server;
 using grpc::ServerBuilder;
 using grpc::ServerContext;
 using grpc::Status;
-using helloworld::MyCustomService;
+using helloworld::Greeter;
 using helloworld::HelloReply;
 using helloworld::HelloRequest;
-using helloworld::JsonRequest;
-using helloworld::JsonReply;
 
 // The gRPC server is defined globally so that SIGTERM handler can shut it
 // down when Kubernetes stops the process.
 std::unique_ptr<Server> server;
 
 // Logic and data behind the server's behavior.
-class GreeterServiceImpl final : public MyCustomService::Service {
+class GreeterServiceImpl final : public Greeter::Service {
   Status SayHello(ServerContext* context, const HelloRequest* request,
                   HelloReply* reply) override {
     std::cout << "Received request: " << request->ShortDebugString()
               << std::endl;
     std::string prefix("Hello ");
     reply->set_message(prefix + request->name());
-    return Status::OK;
-  }
-
-  Status MyCustomFunction(ServerContext* context, const JsonRequest* request, JsonReply* reply) override {
-    std::cout << "Received request: " << request->ShortDebugString()
-              << std::endl;
-
-    reply->set_code(201);
     return Status::OK;
   }
 };

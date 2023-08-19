@@ -32,16 +32,14 @@ using grpc::Channel;
 using grpc::ChannelCredentials;
 using grpc::ClientContext;
 using grpc::Status;
-using helloworld::MyCustomService;
+using helloworld::Greeter;
 using helloworld::HelloReply;
 using helloworld::HelloRequest;
-using helloworld::JsonRequest;
-using helloworld::JsonReply;
 
-class MyCustomClient {
+class GreeterClient {
  public:
-  MyCustomClient(std::shared_ptr<Channel> channel)
-      : stub_(MyCustomService::NewStub(channel)) {}
+  GreeterClient(std::shared_ptr<Channel> channel)
+      : stub_(Greeter::NewStub(channel)) {}
 
   // Assembles the client's payload, sends it and presents the response back
   // from the server.
@@ -70,39 +68,13 @@ class MyCustomClient {
     }
   }
 
-  int MyCustomFunction(int id, const std::string& name) {
-    // Data we are sending to the server.
-    JsonRequest request;
-    request.set_name(name);
-    request.set_id(id);
-
-    // Container for the data we expect from the server.
-    JsonReply reply;
-
-    // Context for the client. It could be used to convey extra information to
-    // the server and/or tweak certain RPC behaviors.
-    ClientContext context;
-
-    // The actual RPC.
-    Status status = stub_->MyCustomFunction(&context, request, &reply);
-
-    // Act upon its status.
-    if (status.ok()) {
-      return reply.code();
-    } else {
-      std::cout << status.error_code() << ": " << status.error_message()
-                << std::endl;
-      return -1;
-    }
-  }
-
  private:
-  std::unique_ptr<MyCustomService::Stub> stub_;
+  std::unique_ptr<Greeter::Stub> stub_;
 };
 
 struct Person {
     std::string name;
-    int id;
+    int age;
 };
 
 int main(int argc, char** argv) {
@@ -142,7 +114,7 @@ int main(int argc, char** argv) {
 std::shared_ptr<ChannelCredentials> channel_creds;
 channel_creds = grpc::InsecureChannelCredentials();
 
-MyCustomClient myCustomService(grpc::CreateChannel(grpc_endpoint, channel_creds));
+GreeterClient greeter(grpc::CreateChannel(grpc_endpoint, channel_creds));
 
   if (Json::parseFromStream(reader, jsonFile, &root, &errs)) {
       if (root.isArray()) {
@@ -151,14 +123,14 @@ MyCustomClient myCustomService(grpc::CreateChannel(grpc_endpoint, channel_creds)
           for (const auto& personJson : root) {
               Person person;
               person.name = personJson["name"].asString();
-              person.id = personJson["id"].asInt();
+              person.age = personJson["age"].asInt();
               people.push_back(person);
           }
 
           // Print the parsed data
           for (const auto& person : people) {
-            const std::string& name(person.name);
-              int reply = myCustomService.MyCustomFunction(person.id, name);
+              std::string user(person.name+" - "+std::to_string(person.age));
+              std::string reply = greeter.SayHello(user);
               std::cout << "Greeter received: " << reply << std::endl;
           }
       } else {
