@@ -1,6 +1,6 @@
-FROM ubuntu:20.04
+FROM debian:latest
 
-RUN DEBIAN_FRONTEND=noninteractive TZ=Etc/UTC apt-get update && apt-get install -y \
+RUN apt-get update && apt-get install -y \
   build-essential autoconf git pkg-config \
   automake libtool curl make g++ unzip cmake libjsoncpp-dev \
   && apt-get clean
@@ -17,16 +17,3 @@ RUN git clone -b ${GRPC_RELEASE_TAG} https://github.com/grpc/grpc /var/local/git
     echo "--- installing grpc ---" && \
     cd /var/local/git/grpc && \
     make -j$(nproc) && make install && make clean && ldconfig
-
-WORKDIR /data
-
-COPY server/server.cc ./server/
-COPY protos/example.proto ./proto/
-COPY CMakeLists.txt ./
-
-RUN mkdir -p cmake/build
-RUN cd cmake/build
-RUN cmake -DCMAKE_PREFIX_PATH=$MY_INSTALL_DIR ../..
-RUN make
-
-CMD ["./greeter-server"]

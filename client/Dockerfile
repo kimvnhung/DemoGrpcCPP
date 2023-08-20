@@ -1,15 +1,17 @@
-FROM grpc/cxx:1.12.0
+FROM ubuntu:20.04
+
+RUN apt-get update
 
 RUN apt-get install -y libjsoncpp-dev
 
 WORKDIR /data
 
-COPY client/client.cc ./client/
-COPY protos/example.proto ./proto/
-COPY Makefile ./
+# COPY client/client.cc ./client/
+# COPY protos/example.proto ./proto/
+# COPY Makefile ./
 
 RUN mkdir json
 
-RUN make greeter-client && make clean
+# RUN make greeter-client && make clean
 
-ENTRYPOINT ["./greeter-client"]
+ENTRYPOINT ["./runner"]
