@@ -1,30 +1,17 @@
-FROM debian:latest
+FROM ubuntu:20.04
 
-RUN apt-get update && apt-get install -y \
-  build-essential autoconf git pkg-config \
-  automake libtool curl make g++ unzip cmake libjsoncpp-dev \
-  && apt-get clean
+RUN apt-get update
 
-# # install protobuf first, then grpc
-# ENV GRPC_RELEASE_TAG v1.10.x
-# RUN git clone -b ${GRPC_RELEASE_TAG} https://github.com/grpc/grpc /var/local/git/grpc && \
-# 		cd /var/local/git/grpc && \
-#     git submodule update --init && \
-#     echo "--- installing protobuf ---" && \
-#     cd third_party/protobuf && \
-#     ./autogen.sh && ./configure --enable-shared && \
-#     make -j$(nproc) && make -j$(nproc) check && make install && make clean && ldconfig && \
-#     echo "--- installing grpc ---" && \
-#     cd /var/local/git/grpc && \
-#     make -j$(nproc) && make install && make clean && ldconfig
-
-COPY ./ data
-RUN mkdir build
-RUN cd build
-RUN cmake ../
-RUN make
+RUN apt-get install -y libjsoncpp-dev
 
 WORKDIR /data
+
+# COPY client/client.cc ./client/
+# COPY protos/example.proto ./proto/
+# COPY Makefile ./
+
 RUN mkdir json
 
-ENTRYPOINT ["./build/client"]
+# RUN make greeter-client && make clean
+
+ENTRYPOINT ["./runner"]

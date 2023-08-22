@@ -10,7 +10,7 @@ services:
       - ./build/server:/data/runner
 
   client:
-    image: example-client
+    image: example-core
     container_name: client
     command: ["server:50051","client"]
     volumes:
