@@ -18,7 +18,13 @@ RUN apt-get update && apt-get install -y \
 #     cd /var/local/git/grpc && \
 #     make -j$(nproc) && make install && make clean && ldconfig
 
+COPY ./ data
+RUN mkdir build
+RUN cd build
+RUN cmake ../
+RUN make
+
 WORKDIR /data
 RUN mkdir json
 
-ENTRYPOINT ["./runner"]
+ENTRYPOINT ["./build/client"]
