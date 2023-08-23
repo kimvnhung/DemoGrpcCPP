@@ -1,5 +1,7 @@
 FROM example-core:latest
 
+RUN apk --no-cache add --upgrade jsoncpp-dev
+
 WORKDIR /data
 
 COPY client ./client
