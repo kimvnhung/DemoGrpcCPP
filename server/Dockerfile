@@ -1,32 +1,19 @@
-FROM ubuntu:20.04
-
-RUN DEBIAN_FRONTEND=noninteractive TZ=Etc/UTC apt-get update && apt-get install -y \
-  build-essential autoconf git pkg-config \
-  automake libtool curl make g++ unzip cmake libjsoncpp-dev \
-  && apt-get clean
-
-# install protobuf first, then grpc
-ENV GRPC_RELEASE_TAG v1.10.x
-RUN git clone -b ${GRPC_RELEASE_TAG} https://github.com/grpc/grpc /var/local/git/grpc && \
-		cd /var/local/git/grpc && \
-    git submodule update --init && \
-    echo "--- installing protobuf ---" && \
-    cd third_party/protobuf && \
-    ./autogen.sh && ./configure --enable-shared && \
-    make -j$(nproc) && make -j$(nproc) check && make install && make clean && ldconfig && \
-    echo "--- installing grpc ---" && \
-    cd /var/local/git/grpc && \
-    make -j$(nproc) && make install && make clean && ldconfig
+FROM example-core:latest
 
 WORKDIR /data
 
-COPY server/server.cc ./server/
-COPY protos/example.proto ./proto/
-COPY CMakeLists.txt ./
+COPY client ./client
+COPY cmake ./cmake
+COPY server ./server
+COPY protos ./protos
+# COPY build.sh ./build.sh
+COPY CMakeLists.txt ./CMakeLists.txt
 
-RUN mkdir -p cmake/build
-RUN cd cmake/build
-RUN cmake -DCMAKE_PREFIX_PATH=$MY_INSTALL_DIR ../..
-RUN make
 
-CMD ["./greeter-server"]
+RUN rm -rf build
+RUN mkdir build 
+RUN cd build && cmake ../
+RUN cd build && make
+
+
+ENTRYPOINT ["./build/server"]

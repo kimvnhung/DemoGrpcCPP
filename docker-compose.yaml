@@ -2,17 +2,12 @@ version: '3.5'
 
 services:
   server:
-    image: example-core
+    image: example-server
     container_name: server
     ports:
       - 50051:50051
-    volumes:
-      - ./build/server:/data/runner
 
   client:
-    image: example-core
+    image: example-client
     container_name: client
     command: ["server:50051","client"]
-    volumes:
-      - ./json:/data/json
-      - ./build/client:/data/runner

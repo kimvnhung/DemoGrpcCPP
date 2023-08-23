@@ -1,17 +1,20 @@
-FROM ubuntu:20.04
-
-RUN apt-get update
-
-RUN apt-get install -y libjsoncpp-dev
+FROM example-core:latest
 
 WORKDIR /data
 
-# COPY client/client.cc ./client/
-# COPY protos/example.proto ./proto/
-# COPY Makefile ./
+COPY client ./client
+COPY cmake ./cmake
+COPY server ./server
+COPY protos ./protos
+COPY json ./json
+# COPY build.sh ./build.sh
+COPY CMakeLists.txt ./CMakeLists.txt
 
-RUN mkdir json
 
-# RUN make greeter-client && make clean
+RUN rm -rf build
+RUN mkdir build 
+RUN cd build && cmake ../
+RUN cd build && make
 
-ENTRYPOINT ["./runner"]
+
+ENTRYPOINT ["./build/client"]

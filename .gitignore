@@ -35,3 +35,4 @@ build/
 *.pb.h
 greeter_client
 greeter_server
+*.tar
