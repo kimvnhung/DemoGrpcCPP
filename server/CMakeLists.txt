@@ -24,7 +24,7 @@ project(HelloWorld C CXX)
 include(cmake/common.cmake)
 
 # Proto file
-get_filename_component(hw_proto "protos/example.proto" ABSOLUTE)
+get_filename_component(hw_proto "../protos/example.proto" ABSOLUTE)
 get_filename_component(hw_proto_path "${hw_proto}" PATH)
 
 # Generated sources
@@ -67,8 +67,8 @@ target_link_libraries(hw_grpc_proto
 
 # Targets greeter_[async_](client|server)
 foreach(_target
-  server client)
-  add_executable(${_target} "${_target}/${_target}.cc")
+  server)
+  add_executable(${_target} "${_target}.cc")
   target_link_libraries(${_target}
     hw_grpc_proto
     absl::flags

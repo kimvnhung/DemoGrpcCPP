@@ -3,17 +3,14 @@ FROM example-core:latest
 WORKDIR /data
 
 COPY client ./client
-COPY cmake ./cmake
-COPY server ./server
+COPY cmake ./client/cmake
 COPY protos ./protos
 COPY json ./json
-# COPY build.sh ./build.sh
-COPY CMakeLists.txt ./CMakeLists.txt
 
 
 RUN rm -rf build
 RUN mkdir build 
-RUN cd build && cmake ../
+RUN cd build && cmake ../client
 RUN cd build && make
 
 
